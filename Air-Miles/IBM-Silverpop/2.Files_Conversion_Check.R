@@ -4,6 +4,10 @@ library(dplyr)
 
 
 
+#Step 1. Connect to VPN
+system(command = 'rasdial "AIMIA SSTP" kazmi Iamneo101127')
+
+
 #Step 2. Checking whether exported files have been converted successfully
 
 #Setting up directory path in which Stored Procs generate result
@@ -47,3 +51,9 @@ outMail[["subject"]] = "Outputs from Stored Proc, converted to ASCII Format (Not
 outMail[["body"]] = completeMessage 
 ## send it                     
 outMail$Send()
+
+
+
+#Disconnect from VPN
+system(command = 'rasdial "AIMIA SSTP" /disconnect')
+
