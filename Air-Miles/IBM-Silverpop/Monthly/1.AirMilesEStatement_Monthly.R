@@ -2,6 +2,7 @@
 library(RODBC)
 library(dplyr)
 library(RCurl)
+library(lubridate)
 
 
 #Connect to VPN
@@ -89,13 +90,14 @@ ftpUpload(what = paste(outputDir, "DB_AM_MEM_DTL_STATEMENT.TXT", sep = "/"),
 
 #Summarise the number of records
 allData <- read.table(text = allData, header = TRUE, sep = "|", stringsAsFactors = FALSE)
-summDataCountry <- allData %>% group_by(country) %>% summarise(totalRecords = n())
-summDataAct <- allData %>% group_by(act) %>% summarise(totalRecords = n())
+allData$generatedOn <- dmy(gsub(".+ to ", "", allData$statement_period))
+summDataCountry <- allData %>% group_by(country, generatedOn) %>% summarise(totalRecords = n(), uniqueCustomers = n_distinct(card_no))
+summDataAct <- allData %>% group_by(act, generatedOn) %>% summarise(totalRecords = n(), uniqueCustomers = n_distinct(card_no))
 
 
 #Export summary files
-write.table(x = summDataCountry, file = paste(outputDir, "Summary_by_Country.TXT", sep = "/"), row.names = FALSE)
-write.table(x = summDataAct, file = paste(outputDir, "Summary_by_Act.TXT", sep = "/"), row.names = FALSE)
+write.table(x = summDataCountry, file = paste(outputDir, "Summary_by_Country.TXT", sep = "/"), row.names = FALSE, append = TRUE)
+write.table(x = summDataAct, file = paste(outputDir, "Summary_by_Act.TXT", sep = "/"), row.names = FALSE, append = TRUE)
 
 
 rm(list = ls())
