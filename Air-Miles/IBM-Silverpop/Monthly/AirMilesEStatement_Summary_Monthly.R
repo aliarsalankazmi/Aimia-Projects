@@ -5,8 +5,9 @@ library(RCurl)
 library(lubridate)
 
 
-#Connect to VPN
-system(command = 'rasdial "AIMIA SSTP" kazmi Iamneo101127')
+#Connect to VPN and load my FTP credentials
+source(file = 'C:\\Users\\kazami\\Desktop\\Aimia\\SilverPop\\Connect_SSTP.R')
+source(file = 'C:\\Users\\kazami\\Desktop\\Aimia\\SilverPop\\ftpCredentials.R')
 
 
 
@@ -48,6 +49,10 @@ system.time(amMonthlyStatement <- sapply(fullStoredProc, function(x) sqlQuery(ch
 length(countries) == length(amMonthlyStatement)
 
 
+#Close database connection
+odbcCloseAll()
+
+
 #re-formatting our results and exporting them
 amMSFormat <- sapply(amMonthlyStatement, function(x) paste0(x, collapse = "\n"), simplify = FALSE)
 mapply(FUN = writeLines, text = amMSFormat, con = outputFiles) 
@@ -59,7 +64,7 @@ ftpUploadFiles <- paste("ftp://transfer3.silverpop.com/upload",
 			outputFileNames, sep = "/")
 handle <- getCurlHandle()
 mapply(FUN = function(...){
-	     ftpUpload(..., userpwd = "aliarsalan.kazmi@aimia.com:Iamneo456_", curl = handle)},
+	     ftpUpload(..., userpwd = ftpCredentials, curl = handle)},
 	     what = outputFiles, to = ftpUploadFiles)
 
 
@@ -83,8 +88,7 @@ writeLines(text = allData, con = paste(outputDir, "DB_AM_MEM_DTL_STATEMENT.TXT",
 handle <- getCurlHandle()
 ftpUpload(what = paste(outputDir, "DB_AM_MEM_DTL_STATEMENT.TXT", sep = "/"), 
 		to = "ftp://transfer3.silverpop.com/upload/DB_AM_MEM_DTL_STATEMENT.TXT", 
-		userpwd = "aliarsalan.kazmi@aimia.com:Iamneo456_", curl = handle)
-
+		userpwd = ftpCredentials, curl = handle)
 
 
 
@@ -96,14 +100,13 @@ summDataAct <- allData %>% group_by(act, generatedOn) %>% summarise(totalRecords
 
 
 #Export summary files
-write.table(x = summDataCountry, file = paste(outputDir, "Summary_by_Country.TXT", sep = "/"), row.names = FALSE, append = TRUE)
-write.table(x = summDataAct, file = paste(outputDir, "Summary_by_Act.TXT", sep = "/"), row.names = FALSE, append = TRUE)
+write.table(x = summDataCountry, file = paste(outputDir, "Summary_by_Country.TXT", sep = "/"), row.names = FALSE, col.names = FALSE, append = TRUE)
+write.table(x = summDataAct, file = paste(outputDir, "Summary_by_Act.TXT", sep = "/"), row.names = FALSE, col.names = FALSE, append = TRUE)
 
 
 rm(list = ls())
 
 
 
-#Disconnect from VPN
-system(command = 'rasdial "AIMIA SSTP" /disconnect')
+
 

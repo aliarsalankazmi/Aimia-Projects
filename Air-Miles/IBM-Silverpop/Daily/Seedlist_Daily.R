@@ -5,7 +5,7 @@ library(RCurl)
 
 
 #Connect to VPN
-system(command = 'rasdial "AIMIA SSTP" kazmi Iamneo101127')
+source(file = 'C:\\Users\\kazami\\Desktop\\Aimia\\SilverPop\\Connect_SSTP.R')
 
 
 
@@ -44,7 +44,4 @@ handle <- getCurlHandle()
 ftpUpload(what = outputFile, to = "ftp://transfer3.silverpop.com/upload/SILVERPOP_SEEDLIST_DAILY.TXT", userpwd = "aliarsalan.kazmi@aimia.com:Iamneo456_", curl = handle)
 
 
-
-#Disconnect from VPN
-system(command = 'rasdial "AIMIA SSTP" /disconnect')
 

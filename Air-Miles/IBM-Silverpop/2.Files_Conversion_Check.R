@@ -3,9 +3,8 @@ library(RDCOMClient)
 library(dplyr)
 
 
-
-#Step 1. Connect to VPN
-system(command = 'rasdial "AIMIA SSTP" kazmi Iamneo101127')
+#Step 1. Connect to AIMIA's SSTP
+source(file = 'C:\\Users\\kazami\\Desktop\\Aimia\\SilverPop\\Connect_SSTP.R')
 
 
 #Step 2. Checking whether exported files have been converted successfully
@@ -46,14 +45,8 @@ OutApp <- COMCreate("Outlook.Application")
 ## create an email 
 outMail = OutApp$CreateItem(0)
 ## configure  email parameter 
-outMail[["To"]] = "aliarsalan.kazmi@aimia.com; mark.edralin@aimia.com"
+outMail[["To"]] = "aliarsalan.kazmi@aimia.com"
 outMail[["subject"]] = "Outputs from Stored Proc, converted to ASCII Format (Notification)"
 outMail[["body"]] = completeMessage 
 ## send it                     
 outMail$Send()
-
-
-
-#Disconnect from VPN
-system(command = 'rasdial "AIMIA SSTP" /disconnect')
-
