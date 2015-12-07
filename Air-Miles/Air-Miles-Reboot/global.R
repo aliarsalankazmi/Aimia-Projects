@@ -44,7 +44,8 @@ library(htmlwidgets)
 
 #-------------------- Loading required data from GitHub Repo -------------------------#
 
-baseUrl <- "https://github.com/aliarsalankazmi/AirMiles_FB_App_Reboot/raw/master/Data/"
+#baseUrl <- "https://github.com/aliarsalankazmi/AirMiles_FB_App_Reboot/raw/master/Data/"
+baseUrl <- "https://github.com/aliarsalankazmi/Aimia-Projects/raw/master/Air-Miles/Air-Miles-Reboot/Data/"
 source_data(paste0(baseUrl,'airmilesMEPageData.RData'))
 source_data(paste0(baseUrl,'wordDataCommented.RData'))
 source_data(paste0(baseUrl,'wordDataLiked.RData'))
@@ -123,3 +124,4 @@ getMonthYear <- 'function(d) {
 
 getYear <- 'function(d) {
                 return d.getFullYear(); }'
+
