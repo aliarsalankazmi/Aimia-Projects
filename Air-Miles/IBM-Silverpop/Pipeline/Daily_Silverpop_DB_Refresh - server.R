@@ -16,18 +16,18 @@ odbcChannel <- odbcConnect("Rmmel10_Insights")
 
 
 #running our stored proc
-#system.time(amDB <- sqlQuery(channel = odbcChannel, query = "EXEC sp_silverpop_member_details"))
+system.time(amDB <- sqlQuery(channel = odbcChannel, query = "EXEC sp_silverpop_member_details"))
 
 
 
 
 #re-formatting our results and exporting them
-#amDBFormat <- paste0(amDB$record, collapse = "\n")
+amDBFormat <- paste0(amDB$record, collapse = "\n")
 
 
 
 #Export the file
-#writeLines(text = amDBFormat, con = outputFile)
+writeLines(text = amDBFormat, con = outputFile)
 
 
 
@@ -37,12 +37,12 @@ odbcCloseAll()
 
 
 #Uploading it to FTP Server for Silverpop
-#ftpUploadFile <- paste("ftp://transfer3.silverpop.com/upload", 
-#			outputFileName, sep = "/")
+ftpUploadFile <- paste("ftp://transfer3.silverpop.com/upload", 
+			outputFileName, sep = "/")
 
 #Upload to FTP
-#handle <- getCurlHandle()
-#ftpUpload(what = outputFile, to = ftpUploadFile, userpwd = ftpCredentials, curl = handle)
+handle <- getCurlHandle()
+ftpUpload(what = outputFile, to = ftpUploadFile, userpwd = ftpCredentials, curl = handle)
 
 
 
